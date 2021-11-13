@@ -1,260 +1,262 @@
+import csv
+
+#lists and data
+cart = list()
+cart_total = 0
 
 
-#Dictionaries
-unit_price={}
-description={}
-stock={}
+def list_all(): 
+    '''
+    displays all the data in the csv file
+    '''
+    with open('products.csv') as reader_obj:
+        csv_reader = csv.reader(reader_obj)
+        items = []
+        for row in csv_reader:
+            items.append(row)
+    return items
 
-#Open file with stock
-details = open("stock.txt","r")
-
-#First line of the file is the number of items
-no_items  = int((details.readline()).rstrip("\n"))
-
-#Add items to dictionaries
-for i in range(0,no_items):
-    line  = (details.readline()).rstrip("\n")
-    x1,x2 = line.split("#")
-    x1=int(x1)
-    x2=float(x2)
-    unit_price.update({x1: x2})
-
-for i in range(0,no_items):
-    line  = (details.readline()).rstrip("\n")
-    x1,x2 = line.split("#")
-    x1=int(x1)
-    description.update({x1: x2})
-
-for i in range(0,no_items):
-    line  = (details.readline()).rstrip("\n")
-    x1,x2 = line.split("#")
-    x1=int(x1)
-    x2=int(x2)
-    stock.update({x1: x2})
-
-details.close()
-
-#List to store the items purchased
-cart=[]
-
-c="y" #Runs the while loop as long as user wants
-
-
-#Instructions
-print("Welcome to The Store an Python project made by Tanyam and Gurnoor Maan")
-print()
-print("A-Add an item")
-print("R-Remove an item")
-print("E-Edit specifics of an item")
-print("L-List all items")
-print("I-Inquire about a part")
-print("P-Purchase")
-print("C-Checkout")
-print("S-Show all parts purchased")
-print("Q-Quit")
-print("remove-Remove an item from the cart")
-print("help-See all commands again")
-print()
-
-
-total_cost=0 
-flag=0 #To check if they have checked out
-
-
-while(c!= "q" or c!= "Q"):
-    c= input("What would you like to do? ")
-    
-    if(c=="q" or c=="Q"):
-        break
-        
-    elif(c=="A" or c=="a"):#Add a part
-        p_no = int(input("Enter part number: "))
-        p_pr = float(input("Enter part price: "))
-        p_desc = input("Enter part description: ")
-        p_stock = int(input("Enter part stock: "))
-        
-        m=0
-        for i in range(0,len(unit_price)):
-            if(p_no in unit_price):
-                p_no+=1
-                m=1
-        if(m==1):
-            print()
-            print("That part number already exists :(, changing value to ",p_no)
-                
-        unit_price.update({p_no: p_pr})
-        description.update({p_no: p_desc})
-        if(p_stock > -1):
-            stock.update({p_no: p_stock})
+def list_one(product_name):
+    '''
+    lists all data for 1 item by its name
+    '''
+    list = list_all()
+    for i in list:
+        if i[0] == product_name:
+            name = i[0]
+            price = int(i[1])            
+            stock = int(i[2])
         else:
-            p_stock = 0
-            stock.update({p_no: p_stock})
-            print("The stock of an item cannot be negative, the stock has been set to 0.")
-        print()
-        print("Part number: ",p_no," Description: ",description.get(p_no)," Price: ",unit_price.get(p_no)," Stock: ",stock.get(p_no))
-        print("Part was added successfully!")
-        print()
-        
-    elif(c=="E" or c=="e"):#Edit a part
-        print()
-        p_no = int(input("Enter part number: "))
-        if(p_no in unit_price):
-            p_pr = float(input("Enter part price: "))
-            p_desc = input("Enter part description: ")
-            p_stock = int(input("Enter part stock: "))
-                
-            unit_price.update({p_no: p_pr})
-            description.update({p_no: p_desc})
-            stock.update({p_no: p_stock})
-            
-        else:
-            print("That item does not exist, to add an item use a")
-        print()
-    
-            
-    elif(c=="R" or c=="r"):#Remove a part
-        print()
-        p_no = int(input("Enter part number: "))
-        if(p_no in unit_price):
-            are_you_sure = input("Are you sure you want to remove that item(y/n)? ")
-            if(are_you_sure=="y" or are_you_sure=="Y"):
-                unit_price.pop(p_no)
-                description.pop(p_no)
-                stock.pop(p_no)
-                print("Item successfully removed!")
-            print()
-        else:
-            print("Sorry, we don't have such an item!")
-            print()
-        
-    elif(c=="L" or c=="l"):#List all the parts
-        print()
-        print("Parts and their prices: ",unit_price)
-        print("Descriptions: ",description)
-        print("Stock left of Item: ",stock)
-        print()
+            pass
+    item = [name,price,stock]
+    return item
 
-    elif(c=="I" or c=="i"):#Inquire about a part
-        print()
-        p_no=int(input("Enter Part Number: "))
-        if(p_no in unit_price):
-            print()
-            print("Part number: ",p_no," Description: ",description.get(p_no)," Price: ",unit_price.get(p_no)," Stock: ",stock.get(p_no))
-            if(stock.get(p_no)<3 and stock.get(p_no)!=0):
-                print("Only ",stock.get(p_no)," remaining! Hurry!")
-            print()
+def append_list(list_of_elem):
+    '''
+    adds new item and row in csv file at the end taking an list as input
+    '''
+    # Open file in append mode
+    with open('products.csv', 'a+', newline='') as write_obj:
+        # Create a writer object from csv module
+        csv_writer = csv.writer(write_obj)
+        # Add contents of list as last row in the csv file
+        csv_writer.writerow(list_of_elem)
+
+def remove_from_list(product_name):
+    '''
+    removes an nested list from csv file and write the whole file again but without the item which was removed
+    '''
+    list = list_all()
+    list = [i for i in list if i[0] != product_name]
+    with open('products.csv', 'w', newline='') as write_obj:
+        csv_writer = csv.writer(write_obj)
+        csv_writer.writerows(list)
+
+def edit_list(product_name, new_name, price, stock):
+    '''
+    edits an nested list from cv file and write the whole file again but with edited item identified by its name 
+    '''
+    list = list_all()
+    for i in list:
+        if i[0] == product_name:
+            i[0] = new_name
+            i[1] = price
+            i[2] = stock
         else:
-            print("Sorry we don't have such an item!")
-            print()
-        
-    elif(c=="P" or c=="p"):#Purchase a part
-        print()
-        p_no = int(input("Enter Part number: "))
-        if(p_no in unit_price):
-            if(flag==1):
-                flag=0
-            stock_current = stock.get(p_no)
-            if(stock_current>0):
-                stock_current = stock.get(p_no)
-                stock[p_no] = stock_current-1
-                item_price = unit_price.get(p_no)
-                total_cost = total_cost+item_price
-                print(description.get(p_no),"added to cart: ","rs",item_price)
-                cart.append(p_no)#Stores item in cart
+            pass              
+    with open('products.csv', 'w', newline='') as write_obj:
+        csv_writer = csv.writer(write_obj)
+        csv_writer.writerows(list)
+
+def show_cart():
+    '''
+    shows current items in cart and price
+    '''
+    print('YOUR CART:: ', cart)
+    print('CART TOTAL:: ', cart_total)
+
+def add_cart(product_name):
+    '''
+    add items to your cart by name and maintains total value of cart
+    '''
+    global cart_total
+    global cart
+    list = list_all()
+    for i in list:
+        if i[0] == product_name:
+            if int(i[2]) > 0:
+                cart.append(product_name)  
+                cart_total += int(i[1])
             else:
-                print("Sorry! We don't have that item in stock!")
+                print('not enough stock')     
         else:
-                print("Sorry! We don't have such an item!")
-        print()
-        
-    elif(c=="C" or c=="c"):#Check out
-        print()
-        print("You bought the following parts: ",cart)
-        print("Total: ","rs",round(total_cost,2))
-        tax= round(0.18*total_cost,2)
-        print("GST is 18%: ","rs",tax)
-        total = round(total_cost+tax,2)
-        print("After Tax: ","rs",total)
-        total_cost=0
-        flag=1
-        print()
-        print("You can still purchase items after check out, your cart has been reset. To quit press q")
-        print()
-        
-    elif(c=="help"):#Display all commands
-        print()
-        print("Help Centre")
-        print("A-Add an item")
-        print("R-Remove an item")
-        print("E-Edit specifics of an item")
-        print("L-List all items")
-        print("I-Inquire about a part")
-        print("P-Purchase")
-        print("C-Checkout")
-        print("S-Show all parts purchased")
-        print("remove-Remove an item from the cart")
-        print("help-See all commands again")
-        print("If you have any other questions or concerns please contact the manager.")
-        print()
-        
-    elif(c=="remove" or c=="Remove"):#To remove an item from the cart
-        print()
-        are_you_sure = input("Are you sure you want to remove an item from the cart(y/n)? ")
-        if(are_you_sure=="y"):
-            p_no = int(input("Enter part number to remove from cart: "))
-            if(p_no in cart):
-                stock_current = stock.get(p_no)
-                stock[p_no] = stock_current+1
-                item_price = unit_price.get(p_no)
-                total_cost = total_cost-item_price
-                j=0
-                for i in range(0,len(cart)):#To find the index of the part in the list cart
-                    if(i==p_no):
-                        j=i
+            pass
 
-                cart.pop(j)
-                print(description.get(p_no),"removed from cart: ")
-                print()
-            else:
-                print()
-                print("That item is not in your cart!")
-                print()
-                
-    elif(c=="s" or c=="S"):#prints list cart
-        print()
-        print(cart)
-        print()
-        
-    else:
-        print()
-        print("ERROR! Contact manager for help!")
-        print()
+def clear_cart():
+    '''
+    resets the cart and all the items in it
+    '''
+    global cart
+    global cart_total
 
+    cart.clear()
+    cart_total = 0
 
-#Outputs total if the user quits without checking out
-if(total_cost>0 and flag==0):
-    print()
+def checkout():
+    '''
+    shows summary of your payment and items bougth and updates the stock
+    '''
     print("You bought: ",cart)
-    print("Total: ","rs",round(total_cost,2))
-    tax= round(0.18*total_cost,2)
+    print("Total: ","rs",round(cart_total,2))
+    tax= round(0.18*cart_total,2)
     print("GST is 18%: ","rs",tax)
-    total = round(total_cost+tax,2)
+    total = round(cart_total+tax,2)
     print("After Tax: ","rs",total)
-    
-print()
-print("Thank you for using The Store")
+    print()
+    print("Thank you for using The Store")
 
-#Write the updated inventory to the file
-details = open("stock.txt","w")
-no_items=len(unit_price)
-details.write(str(no_items)+"\n")
-for i in range(0,no_items):
-    details.write(str(i+1)+"#"+str(unit_price[i+1])+"\n")
+    for i in cart:
+        decrement_stock(i)
+      
+def decrement_stock(product_name):
+    '''
+    removes 1 from the stock of product by name and removes the item if no stock is available
+    '''
+    item = list_one(product_name)
+    item[2] -= 1
+    edit_list(product_name,item[0],item[1],item[2])
+
+    if item[2] == 0:
+        remove_from_list(product_name)
+
+def seller():
+    print()
+    print('SELECT AN OPTION T0 PROCEED')
+    print(40*'---')
+    print('A- add an item to sell')
+    print('R- remove an item')
+    print('E- edit name , price and stock of an item')
+    print('O- check data for an item')
+    print('L- check all the items in stock')
+    print('Q- quit')
+
+    c= str()
+    while(c != 'Q' or c != 'q'):
+        c=input('What would you like to do? ')
+
+        if(c=="q" or c=="Q"):
+            break
+        
+        elif(c == 'A' or c == 'a'):
+            name=input('Enter name of product= ')
+            price=int(input('Enter price of product= '))
+            stock=int(input('Enter stock available of product= '))
+            l = [name,price,stock]
+            append_list(l)
+            print('product entered in data')
+        
+        elif(c == 'R' or c == 'r'):
+            name=input('Enter name of the product you want to remove= ')
+            remove_from_list(name)
+            print('product removed')  
+
+        elif(c == 'E' or c == 'e'):
+            name=input('Enter name of the product you want to edit= ')
+            new_name=input('Enter edited name= ')
+            new_price=int(input('Enter edited price= '))
+            new_stock=int(input('Enter edited stock ammount= '))
+            edit_list(name,new_name,new_price,new_stock)
+            print('product edited')
+        
+        elif(c == 'O' or c == 'o'):
+            name=input('Enter name of product= ')
+            print(list_one(name))    
+
+        elif(c == 'L' or c == 'l'):
+            print(list_all())
+
+def buyer():
+    print()
+    print('SELECT AN OPTION TO PROCEED')
+    print(40*'---')
+    print('L- check all items for sale')
+    print('O- check data for an item')
+    print('S- view items in cart')
+    print('A- add item to cart')
+    print('C- clear cart')
+    print('P- purchase')
+    print('Q- quit')
+
+    c= str()
+    while(c != 'Q' or c != 'q'):
+        c=input('What would you like to do? ')
+
+        if(c=="q" or c=="Q"):
+            break
+
+        elif(c == 'L' or c == 'l'):
+            print(list_all())
+
+        elif(c == 'O' or c == 'o'):    
+            name=input('Enter name of product= ')
+            print(list_one(name))
+
+        elif(c == 'S' or c == 's'):
+            show_cart()
+
+        elif(c == 'A' or c == 'a'):
+            name = input('Enter name of product= ')
+            add_cart(name)
+            print('CART UPDATED')
+
+        elif(c == 'C' or c == 'c'):  
+            clear_cart()
+            print('CART CLEARED')
+
+        elif(c == 'P' or c == 'p'):    
+            checkout()
     
-for i in range(0,no_items):
-    details.write(str(i+1)+"#"+description[i+1]+"\n")
+
+
+print('SELECT AN OPTION TO PROCEED')
+print(40*'---')
+print('1. Seller')
+print('2. Buyer')
+print('3. Quit')
+
+c= str()
+while(c != 3):
+    c=int(input('Enter your choice= '))
+        
+    if(c== 3):
+        break
     
-for i in range(0,no_items):
-    details.write(str(i+1)+"#"+str(stock[i+1])+"\n")
-    
-details.close()
+    elif(c == 2):
+        buyer()
+        break
+
+    elif(c == 1):
+        print('Default username and pass= ADMIN')
+        print(40*'---')
+        admin=input('Enter username= ')
+        passw=input('Enter password= ')
+            
+        if admin == 'ADMIN' and passw == 'ADMIN':
+            seller()
+            break
+        else:
+            print('Wrong pass')    
+
+#l=['candy',1,23]
+#append_list(l)
+#remove_from_list('pink candy')
+#edit_list('candy','pink candy', 5)
+#add_cart('apple')
+#show_cart()
+#clear_cart()
+#checkout()
+#decrement_stock('apple')
+#print(list_one('apple'))
+#print(list_all())
+#seller()
+#buyer()
