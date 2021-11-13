@@ -3,4 +3,4 @@
 
 
 
-[![Run on Repl.it](https://repl.it/badge/github/T4nae/Store-Management-and-cart)](https://replit.com/@T4nae/Store-Management-and-cart)
+[![Run on Repl.it](https://repl.it/badge/github/T4nae/Storee_and_Inventory_Management_System)](https://replit.com/@T4nae/StoreandInventoryManagementSytem)
