@@ -138,13 +138,14 @@ def seller():
     print('E- edit name , price and stock of an item')
     print('O- check data for an item')
     print('L- check all the items in stock')
-    print('Q- quit')
+    print('Q- return')
 
     c= str()
     while(c != 'Q' or c != 'q'):
         c=input('What would you like to do? ')
 
         if(c=="q" or c=="Q"):
+            selector()
             break
         
         elif(c == 'A' or c == 'a'):
@@ -185,13 +186,14 @@ def buyer():
     print('A- add item to cart')
     print('C- clear cart')
     print('P- purchase')
-    print('Q- quit')
+    print('Q- return')
 
     c= str()
     while(c != 'Q' or c != 'q'):
         c=input('What would you like to do? ')
 
         if(c=="q" or c=="Q"):
+            selector()
             break
 
         elif(c == 'L' or c == 'l'):
@@ -218,45 +220,40 @@ def buyer():
     
 
 
-print('SELECT AN OPTION TO PROCEED')
-print(40*'---')
-print('1. Seller')
-print('2. Buyer')
-print('3. Quit')
+def selector():
+    print(40*'---')
+    print('WELCOME TO STORE AND INVENTORY MANAGEMENT SYSTEM')
+    print('SELECT AN OPTION TO PROCEED')
+    print(40*'---')
+    print('1. Seller')
+    print('2. Buyer')
+    print('3. Quit')
 
-c= str()
-while(c != 3):
-    c=int(input('Enter your choice= '))
-        
-    if(c== 3):
-        break
-    
-    elif(c == 2):
-        buyer()
-        break
-
-    elif(c == 1):
-        print('Default username and pass= ADMIN')
-        print(40*'---')
-        admin=input('Enter username= ')
-        passw=input('Enter password= ')
+    c= str()
+    while(c != 3):
+        c=int(input('Enter your choice= '))
             
-        if admin == 'ADMIN' and passw == 'ADMIN':
-            seller()
+        if(c== 3):
+            print(40*'---')
+            print('THANKS FOR USING STORE AND INVENTORY MANAGEMENT SYSTEM')
+            print('MADE BY TANYAM BAWEJA and GURNOOR SINGH MAAN CLASS XII N.MED')
+            print(40*'---')
             break
-        else:
-            print('Wrong pass')    
+        
+        elif(c == 2):
+            buyer()
+            break
 
-#l=['candy',1,23]
-#append_list(l)
-#remove_from_list('pink candy')
-#edit_list('candy','pink candy', 5)
-#add_cart('apple')
-#show_cart()
-#clear_cart()
-#checkout()
-#decrement_stock('apple')
-#print(list_one('apple'))
-#print(list_all())
-#seller()
-#buyer()
+        elif(c == 1):
+            print('Default username and pass= ADMIN')
+            print(40*'---')
+            admin=input('Enter username= ')
+            passw=input('Enter password= ')
+                
+            if admin == 'ADMIN' and passw == 'ADMIN':
+                seller()
+                break
+            else:
+                print('Wrong pass')
+                
+selector()                
