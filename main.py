@@ -146,9 +146,9 @@ def seller():
         c=input('What would you like to do? ')
 
         if(c=="q" or c=="Q"):
-            clear_cart()
             selector()
             break
+           
         
         elif(c == 'A' or c == 'a'):
             name=input('Enter name of product= ')
@@ -195,6 +195,7 @@ def buyer():
         c=input('What would you like to do? ')
 
         if(c=="q" or c=="Q"):
+            clear_cart()
             selector()
             break
 
