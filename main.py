@@ -117,6 +117,7 @@ def checkout():
 
     for i in cart:
         decrement_stock(i)
+    clear_cart()   
       
 def decrement_stock(product_name):
     '''
@@ -145,6 +146,7 @@ def seller():
         c=input('What would you like to do? ')
 
         if(c=="q" or c=="Q"):
+            clear_cart()
             selector()
             break
         
