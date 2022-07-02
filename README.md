@@ -1,5 +1,5 @@
 # Store_management_and_shoping
-```Made by Tanyam Baweja and Gurnoor Singh Maan using python3```
+```Made by Tanyam Baweja and Gurnoor Singh Maan using python3 for XII CS project```
 
 
 
